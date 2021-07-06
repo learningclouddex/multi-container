@@ -10,11 +10,11 @@ before_install:
 script:
   - docker run -e CI=true sandeshcomplex/react-test npm test
 
- after_success:
+after_success:
   - docker build -t sandeshcomplex/multi-client ./client
   - docker build -t sandeshcomplex/multi-nginx ./nginx
   - docker build -t sandeshcomplex/multi-server ./server
-  - docker build -t sandeshcompled/multi-worker ./worker
+  - docker build -t sandeshcomplex/multi-worker ./worker
 # Log in to the docker cli  
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
