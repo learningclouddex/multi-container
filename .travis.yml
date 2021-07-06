@@ -1,0 +1,26 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t sandeshcomplex/react-test -f ./client/Dockerfile.dev ./client
+ 
+script:
+  - docker run -e CI=true sandeshcomplex/react-test npm test
+
+ after_success:
+  - docker build -t sandeshcomplex/multi-client ./client
+  - docker build -t sandeshcomplex/multi-nginx ./nginx
+  - docker build -t sandeshcomplex/multi-server ./server
+  - docker build -t sandeshcompled/multi-worker ./worker
+# Log in to the docker cli  
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push sandeshcomplex/multi-client
+  - docker push sandeshcomplex/multi-nginx
+  - docker push sandeshcomplex/multi-server
+  - docker push sandeshcompled/multi-worker
+
+  
